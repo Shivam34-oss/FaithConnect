@@ -1,0 +1,40 @@
+.create-post-view {
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.create-post-view h2 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 24px;
+}
+
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.create-post-form textarea {
+  font-family: inherit;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 14px;
+}
+
+.create-post-form textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.create-post-form > div:last-child {
+  display: flex;
+  gap: 12px;
+}

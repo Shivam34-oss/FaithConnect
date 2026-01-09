@@ -1,0 +1,25 @@
+{
+  "name": "faithconnect",
+  "version": "1.0.0",
+  "description": "A religious social app built with React, Node.js, Express, and MongoDB",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "cd client && npm run build",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "start": "cd server && npm start"
+  },
+  "keywords": [
+    "faith",
+    "social",
+    "religious",
+    "community"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

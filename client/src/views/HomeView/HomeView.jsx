@@ -1,0 +1,81 @@
+import { useState, useEffect } from 'react'
+import { useQuery } from 'react-query'
+import { postService } from '@data/services/postService'
+import PostCard from '@widgets/PostCard/PostCard'
+import Button from '@widgets/Button/Button'
+import { Plus, Loader } from 'lucide-react'
+import { toast } from 'react-toastify'
+import './HomeView.css'
+import { useNavigate } from 'react-router-dom'
+
+const HomeView = () => {
+  const navigate = useNavigate()
+  const [page, setPage] = useState(1)
+  const limit = 10
+
+  const {
+    data: postsData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery(
+    ['posts', page],
+    () => postService.getPosts({ page, limit }),
+    {
+      keepPreviousData: true,
+    }
+  )
+
+  const posts = postsData?.posts || []
+  const hasMore = postsData?.hasMore || false
+
+  if (error) {
+    toast.error('Failed to load posts')
+  }
+
+  return (
+    <div className="home-view">
+      <div className="home-header">
+        <h1>Feed</h1>
+        <Button onClick={() => navigate('/posts/create')}>
+          <Plus size={18} />
+          Create Post
+        </Button>
+      </div>
+
+      <div className="home-content">
+        {isLoading && posts.length === 0 ? (
+          <div className="home-loading">
+            <Loader className="spinner" size={32} />
+            <p>Loading posts...</p>
+          </div>
+        ) : posts.length === 0 ? (
+          <div className="home-empty">
+            <p>No posts yet. Be the first to share!</p>
+          </div>
+        ) : (
+          <>
+            <div className="home-posts">
+              {posts.map((post) => (
+                <PostCard key={post._id} post={post} onUpdate={refetch} />
+              ))}
+            </div>
+            {hasMore && (
+              <div className="home-load-more">
+                <Button
+                  variant="outline"
+                  onClick={() => setPage((prev) => prev + 1)}
+                  loading={isLoading}
+                >
+                  Load More
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default HomeView
