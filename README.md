@@ -81,37 +81,6 @@ faithconnect/
    npm run dev:server  # Backend on http://localhost:5000
    ```
 
-## 📚 API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/profile` - Get current user profile
-- `PUT /api/auth/profile` - Update profile
-- `POST /api/auth/logout` - Logout user
-
-### Users
-- `GET /api/users/:id` - Get user by ID
-- `POST /api/users/:id/follow` - Follow user
-- `DELETE /api/users/:id/unfollow` - Unfollow user
-
-### Posts
-- `GET /api/posts` - Get all posts
-- `GET /api/posts/:id` - Get post by ID
-- `POST /api/posts` - Create post
-- `PUT /api/posts/:id` - Update post
-- `DELETE /api/posts/:id` - Delete post
-- `POST /api/posts/:id/like` - Like post
-- `DELETE /api/posts/:id/like` - Unlike post
-- `POST /api/posts/:id/comments` - Add comment
-
-### Communities
-- `GET /api/communities` - Get all communities
-- `GET /api/communities/:id` - Get community by ID
-- `POST /api/communities` - Create community
-- `POST /api/communities/:id/join` - Join community
-- `DELETE /api/communities/:id/leave` - Leave community
-
 ## 🎨 Tech Stack
 
 ### Frontend
