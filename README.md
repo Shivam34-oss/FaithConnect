@@ -132,41 +132,6 @@ faithconnect/
 - Bcrypt
 - Express Validator
 
-## 📚 Documentation
 
-Comprehensive documentation is available:
 
-- **[PROJECT_DOCUMENTATION.md](./PROJECT_DOCUMENTATION.md)** - Complete project explanation, architecture, and features
-- **[TECH_STACK_DETAILS.md](./TECH_STACK_DETAILS.md)** - Detailed list of all technologies used
-- **[VIDEO_SCRIPT.md](./VIDEO_SCRIPT.md)** - 4-5 minute video script (Hindi/English)
-- **[INTERVIEW_PREPARATION.md](./INTERVIEW_PREPARATION.md)** - Interview Q&A and talking points
-- **[LOGO_DESIGN.md](./LOGO_DESIGN.md)** - Logo design guide and implementation
 
-## 🎬 Video Script
-
-A complete video script is available in [VIDEO_SCRIPT.md](./VIDEO_SCRIPT.md) for creating a 4-5 minute project demonstration video.
-
-## 🎨 Logo
-
-The FaithConnect logo is implemented using:
-- Emoji icon: ⛪
-- Gradient text styling
-- SVG logo available in `client/public/logo.svg`
-
-See [LOGO_DESIGN.md](./LOGO_DESIGN.md) for design details and customization options.
-
-## 💼 Interview Preparation
-
-Check [INTERVIEW_PREPARATION.md](./INTERVIEW_PREPARATION.md) for:
-- Common interview questions and answers
-- Project presentation tips
-- Key talking points
-- Demo script
-
-## 📝 License
-
-ISC
-
-## 👥 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
