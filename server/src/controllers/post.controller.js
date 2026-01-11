@@ -243,6 +243,7 @@ export const likePost = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Post liked successfully',
+      post,
     })
   } catch (error) {
     res.status(500).json({
@@ -274,6 +275,7 @@ export const unlikePost = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Post unliked successfully',
+      post,
     })
   } catch (error) {
     res.status(500).json({

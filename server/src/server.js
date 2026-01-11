@@ -17,6 +17,7 @@ import feedRoutes from './routes/feed.routes.js'
 import messageRoutes from './routes/message.routes.js'
 import notificationRoutes from './routes/notification.routes.js'
 import leaderRoutes from './routes/leader.routes.js'
+import chatRoutes from './routes/chat.routes.js'
 
 // Import a middleware
 import { errorHandler } from './middleware/errorHandler.js'
@@ -29,6 +30,8 @@ const app = express()
 const PORT = process.env.PORT || 5000
 const MONGODB_URI =
   process.env.MONGODB_URI || 'mongodb://localhost:27017/faithconnect'
+
+ 
 
 // Rate limiting
 const limiter = rateLimit({
@@ -61,6 +64,7 @@ app.use('/api/feed', feedRoutes)
 app.use('/api/messages', messageRoutes)
 app.use('/api/notifications', notificationRoutes)
 app.use('/api/leaders', leaderRoutes)
+app.use('/api/chat', chatRoutes)
 
 // Error handling middleware
 app.use(notFound)

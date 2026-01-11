@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '@core/store/authStore'
 import Layout from '@widgets/Layout/Layout'
+import Chatbot from '@widgets/Chatbot/Chatbot'
 import HomeView from '@views/HomeView/HomeView'
 import LoginView from '@views/AuthView/LoginView'
 import RegisterView from '@views/AuthView/RegisterView'
@@ -20,30 +21,35 @@ function PrivateRoute({ children }) {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<LoginView />} />
-      <Route path="/register" element={<RegisterView />} />
+    <>
+      <Routes>
+        <Route path="/login" element={<LoginView />} />
+        <Route path="/register" element={<RegisterView />} />
+        
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<HomeView />} />
+          <Route path="profile" element={<ProfileView />} />
+          <Route path="community" element={<CommunityView />} />
+          <Route path="prayers" element={<PrayersView />} />
+          <Route path="scriptures" element={<ScripturesView />} />
+          <Route path="settings" element={<SettingsView />} />
+          <Route path="posts/create" element={<CreatePost />} />
+          <Route path="posts/:id" element={<PostDetailView />} />
+        </Route>
+        
+        <Route path="*" element={<NotFoundView />} />
+      </Routes>
       
-      <Route
-        path="/"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<HomeView />} />
-        <Route path="profile" element={<ProfileView />} />
-        <Route path="community" element={<CommunityView />} />
-        <Route path="prayers" element={<PrayersView />} />
-        <Route path="scriptures" element={<ScripturesView />} />
-        <Route path="settings" element={<SettingsView />} />
-        <Route path="posts/create" element={<CreatePost />} />
-        <Route path="posts/:id" element={<PostDetailView />} />
-      </Route>
-      
-      <Route path="*" element={<NotFoundView />} />
-    </Routes>
+      {/* Chatbot - Available on all pages */}
+      <Chatbot />
+    </>
   )
 }
 

@@ -1,0 +1,16 @@
+/* ReelCard styles */
+.reel-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background-color: #000;
+  aspect-ratio: 9 / 16;
+  max-height: 500px;
+}
+
+.reel-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

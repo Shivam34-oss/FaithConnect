@@ -9,13 +9,24 @@ export const getCommunities = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
     const skip = (page - 1) * limit
+    const search = req.query.search || ''
 
-    const communities = await Community.find()
+    const query = search 
+      ? {
+          $or: [
+            { name: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+            { faith: { $regex: search, $options: 'i' } }
+          ]
+        }
+      : {}
+
+    const communities = await Community.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
 
-    const total = await Community.countDocuments()
+    const total = await Community.countDocuments(query)
     const hasMore = skip + communities.length < total
 
     res.status(200).json({

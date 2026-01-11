@@ -6,9 +6,16 @@ A religious social app built with React, Node.js, Express, and MongoDB.
 
 - User authentication and authorization
 - Social feed with posts, likes, and comments
-- Faith communities
+- Faith communities (Create, Join, Delete)
 - User profiles and following system
 - Real-time updates
+
+## 🛡️ Security Features
+
+- **JWT Authentication:** Secure stateless authentication using JSON Web Tokens.
+- **Rate Limiting:** Protection against brute-force and DDoS attacks using `express-rate-limit`.
+- **Helmet:** Secure HTTP headers configuration.
+- **Environment Variables:** Sensitive configuration separated from code.
 
 ## 📁 Project Structure
 
