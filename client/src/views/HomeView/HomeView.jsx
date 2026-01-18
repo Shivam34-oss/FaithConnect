@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, } from 'react'
 import { useQuery } from 'react-query'
 import { feedService } from '@data/services/feedService'
 import PostCard from '@widgets/PostCard/PostCard'
 import ReelCard from '@widgets/ReelCard/ReelCard'
 import Button from '@widgets/Button/Button'
-import { Plus, Loader } from 'lucide-react'
+import { Plus, Loader, Sparkles } from 'lucide-react'
 import { toast } from 'react-toastify'
 import './HomeView.css'
 import { useNavigate } from 'react-router-dom'
@@ -52,8 +52,18 @@ const HomeView = () => {
             <p>Loading feed...</p>
           </div>
         ) : feedItems.length === 0 ? (
-          <div className="home-empty">
-            <p>No content yet. Be the first to share!</p>
+          <div className="home-welcome">
+            <div className="welcome-animation">
+              <div className="welcome-circle-outer"></div>
+              <div className="welcome-circle-inner"></div>
+              <Sparkles size={48} className="welcome-icon" />
+            </div>
+            <h2>Welcome to FaithConnect!</h2>
+            <p>Your feed is waiting for you. Start by creating a post or finding a community.</p>
+            <Button onClick={() => navigate('/posts/create')}>
+              <Plus size={18} />
+              Create First Post
+            </Button>
           </div>
         ) : (
           <>

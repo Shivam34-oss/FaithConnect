@@ -1,16 +1,26 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@core/store/authStore'
 import { getInitials } from '@core/utils/helpers'
-import { LogOut, User, Home, Users } from 'lucide-react'
+import { LogOut, User, Home, Users, Search } from 'lucide-react'
+import { toast } from 'react-toastify'
 import './Navbar.css'
 
 const Navbar = () => {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
+  const [searchTerm, setSearchTerm] = useState('')
 
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      toast.info(`Searching for: ${searchTerm}`)
+      setSearchTerm('')
+    }
   }
 
   return (
@@ -21,11 +31,16 @@ const Navbar = () => {
           <span className="navbar-title">FaithConnect</span>
         </Link>
 
-        <div className="navbar-search">
+        <div className="navbar-search" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '24px', padding: '0 12px' }}>
+          <Search size={18} color="#6b7280" />
           <input
             type="text"
             placeholder="Search..."
             className="navbar-search-input"
+            style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', marginLeft: '8px' }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleSearch}
           />
         </div>
 

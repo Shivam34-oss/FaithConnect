@@ -1,9 +1,9 @@
 import { ChatMessage } from '../models/ChatMessage.js'
 import { User } from '../models/User.js'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 // AI Configuration - Using rule-based approach for now
 // You can integrate with OpenAI, Claude, or other AI services by replacing findBestMatch()
-const AI_API_KEY = process.env.AI_API_KEY || 'demo'
 
 // Sample faith-related responses for demo
 const faithResponses = {
@@ -44,6 +44,63 @@ const findBestMatch = (message) => {
   return 'That\'s a great question! I\'m here to help you navigate FaithConnect and connect with your faith community. Can you tell me more about what you\'re looking for? You can ask me about communities, prayers, scriptures, or connecting with other believers.'
 }
 
+const getAIResponse = async (message) => {
+  try {
+    console.log('🤖 AI Request Started for:', message)
+
+    // 1. Try Google Gemini (Requires GOOGLE_API_KEY in .env)
+    if (process.env.GOOGLE_API_KEY) {
+      try {
+        console.log('🔑 GOOGLE_API_KEY found. Using Gemini SDK...')
+        const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY)
+        // Using gemini-pro as it is the most stable model available globally
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+
+        const prompt = `You are a helpful, kind, and spiritual AI assistant for a social platform called FaithConnect. Keep answers concise and supportive. User message: ${message}`
+        
+        const result = await model.generateContent(prompt)
+        const response = await result.response
+        const text = response.text()
+
+        console.log('✅ Gemini AI Success!')
+        return text
+      } catch (error) {
+        console.error('❌ Gemini SDK Error:', error.message)
+      }
+    }
+
+    // 2. Try OpenAI (Requires OPENAI_API_KEY in .env)
+    else if (process.env.OPENAI_API_KEY) {
+      console.log('🔑 OPENAI_API_KEY found. Calling OpenAI...')
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            { role: 'system', content: 'You are a helpful, kind, and spiritual AI assistant for FaithConnect.' },
+            { role: 'user', content: message }
+          ]
+        })
+      })
+      const data = await response.json()
+      if (data.choices && data.choices[0]?.message?.content) {
+        console.log('✅ OpenAI Success!')
+        return data.choices[0].message.content
+      }
+    }
+    else {
+      console.warn('⚠️ No API Key found in environment variables (GOOGLE_API_KEY or OPENAI_API_KEY)')
+    }
+  } catch (error) {
+    console.error('💥 AI System Error:', error.message)
+  }
+  return null
+}
+
 // @desc    Send message to AI
 // @route   POST /api/chat/message
 // @access  Private
@@ -66,25 +123,13 @@ export const sendMessage = async (req, res) => {
       type: 'user'
     })
 
-    // Get AI response (rule-based for now, you can integrate with OpenAI here)
-    let reply = findBestMatch(message)
-
-    // Optional: Integrate with actual AI API
-    // if (process.env.AI_API_KEY && process.env.AI_API_KEY !== 'demo') {
-    //   try {
-    //     const aiResponse = await axios.post(AI_API_URL, {
-    //       model: 'gpt-3.5-turbo',
-    //       messages: [{ role: 'user', content: message }],
-    //       max_tokens: 500
-    //     }, {
-    //       headers: { 'Authorization': `Bearer ${process.env.AI_API_KEY}` }
-    //     })
-    //     reply = aiResponse.data.choices[0].message.content
-    //   } catch (aiError) {
-    //     console.error('AI API Error:', aiError.message)
-    //     reply = findBestMatch(message) // Fallback to rule-based
-    //   }
-    // }
+    // Get AI response
+    let reply = await getAIResponse(message)
+    
+    // Fallback to rule-based if AI fails or no key configured
+    if (!reply) {
+      reply = findBestMatch(message)
+    }
 
     // Save bot message
     const botMessage = await ChatMessage.create({

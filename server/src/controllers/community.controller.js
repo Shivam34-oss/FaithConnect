@@ -21,10 +21,18 @@ export const getCommunities = async (req, res) => {
         }
       : {}
 
-    const communities = await Community.find(query)
+    let communities = await Community.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
+      .lean()
+
+    const userId = req.user._id.toString()
+    communities = communities.map((community) => ({
+      ...community,
+      isMember: community.members.some((memberId) => memberId.toString() === userId),
+      membersCount: community.members.length,
+    }))
 
     const total = await Community.countDocuments(query)
     const hasMore = skip + communities.length < total
@@ -38,6 +46,43 @@ export const getCommunities = async (req, res) => {
         total,
         hasMore,
       },
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error',
+    })
+  }
+}
+
+// @desc    Delete community
+// @route   DELETE /api/communities/:id
+// @access  Private (Admin only)
+export const deleteCommunity = async (req, res) => {
+  try {
+    const community = await Community.findById(req.params.id)
+
+    if (!community) {
+      return res.status(404).json({
+        success: false,
+        message: 'Community not found',
+      })
+    }
+
+    // Check if user is an admin
+    const isAdmin = community.admins.some((adminId) => adminId.toString() === req.user._id.toString())
+    if (!isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: 'User is not authorized to delete this community',
+      })
+    }
+
+    await Community.findByIdAndDelete(req.params.id)
+
+    res.status(200).json({
+      success: true,
+      message: 'Community deleted successfully',
     })
   } catch (error) {
     res.status(500).json({

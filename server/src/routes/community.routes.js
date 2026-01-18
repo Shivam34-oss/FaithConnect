@@ -5,6 +5,7 @@ import {
   createCommunity,
   joinCommunity,
   leaveCommunity,
+  deleteCommunity,
 } from '../controllers/community.controller.js'
 import { protect } from '../middleware/auth.js'
 import { body } from 'express-validator'
@@ -28,5 +29,6 @@ router.get('/:id', protect, getCommunityById)
 router.post('/', protect, createCommunityValidation, createCommunity)
 router.post('/:id/join', protect, joinCommunity)
 router.delete('/:id/leave', protect, leaveCommunity)
+router.delete('/:id', protect, deleteCommunity)
 
 export default router

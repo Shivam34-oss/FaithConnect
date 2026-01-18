@@ -21,6 +21,14 @@ const PostCard = ({ post, onUpdate }) => {
   const [showMenu, setShowMenu] = useState(false)
   const menuRef = useRef(null)
 
+  // Robust check for post ownership to show Delete button
+  const authorId = post.author?._id || post.author
+  const isAuthor = user?._id && authorId && String(user._id) === String(authorId)
+
+  // Smart display values: Agar author data missing hai lekin post current user ki hai, to user ka data dikhao
+  const displayAuthorName = post.author?.name || (isAuthor ? user?.name : 'FaithConnect Member')
+  const displayAuthorAvatar = post.author?.avatar || (isAuthor ? user?.avatar : null)
+
   // Menu ke bahar click karne par menu band karne ke liye
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -78,20 +86,20 @@ const PostCard = ({ post, onUpdate }) => {
           to={`/profile/${post.author?._id || post.author}`}
           className="post-card-author"
         >
-          {post.author?.avatar ? (
+          {displayAuthorAvatar ? (
             <img
-              src={post.author.avatar}
-              alt={post.author.name}
+              src={displayAuthorAvatar}
+              alt={displayAuthorName}
               className="post-card-avatar"
             />
           ) : (
             <div className="post-card-avatar-placeholder">
-              {getInitials(post.author?.name || 'U')}
+              {getInitials(displayAuthorName)}
             </div>
           )}
           <div className="post-card-author-info">
             <div className="post-card-author-name">
-              {post.author?.name || 'Unknown User'}
+              {displayAuthorName}
             </div>
             <div className="post-card-time">
               {getRelativeTime(post.createdAt)}
@@ -120,7 +128,7 @@ const PostCard = ({ post, onUpdate }) => {
               boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
               minWidth: '120px'
             }}>
-              {user?._id === (post.author?._id || post.author) ? (
+              {isAuthor ? (
                 <button
                   onClick={handleDelete}
                   style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '8px', border: 'none', background: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '14px' }}

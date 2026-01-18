@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from 'react-query'
 import { postService } from '@data/services/postService'
 import Button from '@widgets/Button/Button'
 import Input from '@widgets/Input/Input'
@@ -8,6 +9,7 @@ import './CreatePost.css'
 
 const CreatePost = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
@@ -17,6 +19,7 @@ const CreatePost = () => {
     setLoading(true)
     try {
       await postService.createPost({ title, content })
+      await queryClient.invalidateQueries(['feed'])
       toast.success('Post created')
       navigate('/')
     } catch (err) {

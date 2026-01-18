@@ -44,6 +44,28 @@ const CommunityView = () => {
     }
   }
 
+  const handleJoinLeave = async (community) => {
+    const action = community.isMember ? 'leave' : 'join';
+    if (action === 'leave') {
+      if (!window.confirm('Are you sure you want to leave this community?')) return;
+      try {
+        await communityService.leaveCommunity(community._id);
+        toast.success('You have left the community.');
+        refetch();
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Failed to leave community.');
+      }
+    } else {
+      try {
+        await communityService.joinCommunity(community._id);
+        toast.success('You have joined the community.');
+        refetch();
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Failed to join community.');
+      }
+    }
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this community?')) return
     try {
@@ -93,9 +115,7 @@ const CommunityView = () => {
         <div className="community-grid">
           {communities.map((community) => (
             <div key={community._id} className="community-card" style={{ position: 'relative' }}>
-             
-              {user?._id && (community.creator?._id || community.creator) && 
-                String(user._id) === String(community.creator?._id || community.creator) && (
+              {user?._id && community.admins?.includes(user._id) && (
                 <button
                   onClick={(e) => {
                     e.preventDefault()
@@ -135,8 +155,8 @@ const CommunityView = () => {
                     {community.membersCount || 0} members
                   </span>
                 </div>
-                <Button variant="outline" fullWidth className="community-card-join">
-                  {community.isMember ? 'Joined' : 'Join Community'}
+                <Button variant="outline" fullWidth className="community-card-join" onClick={() => handleJoinLeave(community)}>
+                  {community.isMember ? 'Leave Community' : 'Join Community'}
                 </Button>
               </div>
             </div>
